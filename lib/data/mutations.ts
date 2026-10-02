@@ -1,6 +1,8 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { priorityMetadata } from "@/lib/ai/priority";
+import { todayInMalaysia } from "@/lib/logic/categorize";
 import type { Status } from "@/lib/types";
 function refresh() { for (const path of ["/", "/tasks", "/companies", "/demo"]) revalidatePath(path); }
 function required(form: FormData, key: string, max = 2000) {
@@ -26,8 +28,9 @@ export async function saveTask(form: FormData) {
       description: required(form, "description"), due_date,
       person_in_charge: String(form.get("person_in_charge") ?? "").trim().slice(0, 200),
       status, priority, amount, remarks: String(form.get("remarks") ?? "").trim().slice(0, 5000) };
+    const enriched = { ...row, ...priorityMetadata(row, todayInMalaysia()) };
     const id = String(form.get("id") ?? "");
-    const result = id ? await db.from("tasks").update(row).eq("id", id).select("id").single() : await db.from("tasks").insert(row).select("id").single();
+    const result = id ? await db.from("tasks").update(enriched).eq("id", id).select("id").single() : await db.from("tasks").insert(enriched).select("id").single();
     if (result.error) throw new Error("Task could not be saved. Please retry.");
     refresh(); return { success: true };
   } catch (e) { return { error: e instanceof Error ? e.message : "Task could not be saved." }; }
@@ -69,5 +72,23 @@ export async function deleteCompany(id: string) {
   const db = await createClient();
   const result = await db.from("companies").delete().eq("id", id).select("id").single();
   if (result.error) return { error: "Delete or reassign this company's tasks first, then try again." };
+  refresh(); return { success: true };
+}
+
+
+export async function reviewSuggestion(id: string, accepted: boolean) {
+  const db = await createClient();
+  const existing = await db.from("tasks").select("*").eq("id", id).single();
+  if (existing.error || existing.data.status === "completed") return { error: "This task has no available suggestion." };
+  const metadata = existing.data.ai_suggested_priority ? {
+    ai_suggested_priority: existing.data.ai_suggested_priority,
+    ai_priority_source: existing.data.ai_priority_source,
+    ai_priority_confidence: existing.data.ai_priority_confidence
+  } : priorityMetadata(existing.data, todayInMalaysia());
+  const result = await db.from("tasks").update({
+    ...metadata, ai_priority_review_status: accepted ? "accepted" : "rejected",
+    ...(accepted ? { priority: metadata.ai_suggested_priority } : {})
+  }).eq("id", id).select("id").single();
+  if (result.error) return { error: "Suggestion review could not be saved." };
   refresh(); return { success: true };
 }

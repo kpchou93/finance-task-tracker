@@ -30,3 +30,14 @@ test("combined filters intersect and search covers remarks and responsible staff
  assert.deepEqual(sortTasks(tasks,"amount").map(t=>t.id),["1","3","2"]);
  assert.equal(tasks[0].id,"1");
 });
+
+import { suggestPriority } from "../lib/ai/priority.ts";
+test("priority scoring and confidence meet the sprint success scenario", () => {
+ const proposal = suggestPriority({due_date:"2026-10-04",amount:80000,category:"Payment"},"2026-10-02");
+ assert.equal(proposal.priority,"high");
+ assert.equal(proposal.confidence,0.82);
+ assert.equal(proposal.score,0.6);
+ assert.equal(suggestPriority({due_date:"2026-10-01",amount:0,category:"Reporting"},"2026-10-02").priority,"medium");
+ assert.equal(suggestPriority({due_date:null,amount:50000,category:"Reporting"},"2026-10-02").priority,"low");
+ assert.equal(suggestPriority({due_date:"2026-10-01",amount:80000,category:"Audit",status:"completed"},"2026-10-02").score,0);
+});
