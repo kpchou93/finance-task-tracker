@@ -14,3 +14,19 @@ test("date arithmetic crosses months and Malaysia midnight correctly", () => {
  assert.equal(addDays("2026-12-30",7),"2027-01-06");
  assert.equal(todayInMalaysia(new Date("2026-10-01T16:00:00Z")),"2026-10-02");
 });
+
+import { filterTasks, sortTasks } from "../lib/logic/filters.ts";
+test("combined filters intersect and search covers remarks and responsible staff", () => {
+ const tasks = [
+  {id:"1",company_id:"acme",category:"Payment",priority:"high",status:"pending",description:"Vendor run",remarks:"CFO approval",person_in_charge:"Sarah",due_date:"2026-10-03",amount:80000,created_at:"2026-10-01"},
+  {id:"2",company_id:"globex",category:"Audit",priority:"high",status:"pending",description:"Audit papers",remarks:null,person_in_charge:"Sarah",due_date:null,amount:0,created_at:"2026-10-02"},
+  {id:"3",company_id:"acme",category:"Payment",priority:"low",status:"completed",description:"Invoices",remarks:null,person_in_charge:"Mike",due_date:"2026-10-04",amount:100,created_at:"2026-10-02"}
+ ];
+ assert.deepEqual(filterTasks(tasks,{company:"acme",priority:"high"},"2026-10-02").map(t=>t.id),["1"]);
+ assert.deepEqual(filterTasks(tasks,{search:"cfo"},"2026-10-02").map(t=>t.id),["1"]);
+ assert.deepEqual(filterTasks(tasks,{search:" SARAH "},"2026-10-02").map(t=>t.id),["1","2"]);
+ assert.equal(filterTasks(tasks,{},"2026-10-02").length,3);
+ assert.deepEqual(sortTasks(tasks,"due").map(t=>t.id),["1","3","2"]);
+ assert.deepEqual(sortTasks(tasks,"amount").map(t=>t.id),["1","3","2"]);
+ assert.equal(tasks[0].id,"1");
+});

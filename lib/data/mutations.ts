@@ -54,3 +54,20 @@ export async function addCompany(form: FormData) {
     refresh(); return { success: true };
   } catch (e) { return { error: e instanceof Error ? e.message : "Company could not be saved." }; }
 }
+
+export async function renameCompany(form: FormData) {
+  try {
+    const db = await createClient();
+    const name = required(form, "name", 200);
+    const id = required(form, "id", 36);
+    const result = await db.from("companies").update({ name }).eq("id", id).select("id").single();
+    if (result.error) throw new Error(result.error.code === "23505" ? "This company already exists." : "Company could not be renamed.");
+    refresh(); return { success: true };
+  } catch (e) { return { error: e instanceof Error ? e.message : "Company could not be renamed." }; }
+}
+export async function deleteCompany(id: string) {
+  const db = await createClient();
+  const result = await db.from("companies").delete().eq("id", id).select("id").single();
+  if (result.error) return { error: "Delete or reassign this company's tasks first, then try again." };
+  refresh(); return { success: true };
+}
