@@ -1,7 +1,7 @@
 import type { Bucket, Task } from "../types.ts";
 export type Filters = { company?: string; category?: string; priority?: string; status?: string; search?: string; bucket?: Bucket | "" };
 export type Sort = "due" | "priority" | "amount" | "created";
-export function filterTasks(tasks: Task[], filters: Filters, today: string) {
+export function filterTasks(tasks: Task[], filters: Filters, _today: string) {
  const search = filters.search?.trim().toLowerCase() || "";
  return tasks.filter(t => (!filters.company || t.company_id === filters.company)
    && (!filters.category || t.category === filters.category)

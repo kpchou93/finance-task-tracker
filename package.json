@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs"
   },
@@ -19,14 +19,17 @@
     "stripe": "^17.0.0"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "15.5.27",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^15.0.0",
+    "eslint-plugin-react-hooks": "5.2.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.71.0"
   },
-  "packageManager": "pnpm@11.19.0"
+  "packageManager": "pnpm@10.34.6"
 }
