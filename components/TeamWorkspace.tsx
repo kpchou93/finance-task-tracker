@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { addWorkspaceMember, createWorkspace, removeWorkspaceMember, renameWorkspace, selectWorkspace } from "@/lib/data/workspaces";
 import type { Workspace, WorkspaceMember } from "@/lib/types";
+import BrandMark from "./BrandMark";
 type Result = { success?: boolean; error?: string };
 export default function TeamWorkspace({ workspace, workspaces, members, userId }: { workspace: Workspace; workspaces: Workspace[]; members: WorkspaceMember[]; userId: string }) {
  const router = useRouter();
@@ -19,8 +20,8 @@ export default function TeamWorkspace({ workspace, workspaces, members, userId }
  }
  const owner = workspace.role === "owner";
  return <main className="team-page">
-  <header className="team-header"><Link className="team-brand" href="/">Finance <span>Task Tracker</span></Link><Link href="/">← Back to dashboard</Link></header>
-  <div className="team-heading"><div><p className="eyebrow">TEAM WORKSPACE</p><h1>{workspace.name}</h1><p className="muted">Shared companies. Clear responsibilities. One view of the work.</p></div><span className="team-role">{workspace.role}</span></div>
+  <header className="team-header"><Link className="team-brand" href="/"><BrandMark /> Finance <span>Task Tracker</span></Link><Link href="/">← Back to dashboard</Link></header>
+  <div className="team-heading"><div><p className="eyebrow">Better together</p><h1>{workspace.name}</h1><p className="muted">A shared space for your team’s next small win.</p></div><span className="team-role">{workspace.role}</span></div>
   {error && <p role="alert" className="notice error">{error}</p>}{message && <p role="status" className="notice success">{message}</p>}
   <div className="team-layout"><section className="team-card"><div className="team-card-heading"><div><h2>Team members <span className="count">{members.length}</span></h2><p className="muted">Members can view and manage this workspace’s companies and tasks.</p></div></div>
    <ul className="team-members">{members.map(member => <li key={member.user_id} className="team-member"><span className="team-member-avatar" aria-hidden="true">{member.email.slice(0, 1).toUpperCase()}</span><div className="team-member-info"><strong>{member.email}</strong><span>{member.user_id === userId ? "You · " : ""}{member.role}</span></div>{owner && member.role !== "owner" && <button className="team-remove" disabled={pending} onClick={() => { if (window.confirm("Remove this member’s access to this workspace? Their task history will be retained.")) { const values = new FormData(); values.set("workspace_id", workspace.id); values.set("user_id", member.user_id); run(() => removeWorkspaceMember(values), "Member removed. Workspace access has been revoked."); } }}>Remove</button>}</li>)}</ul>

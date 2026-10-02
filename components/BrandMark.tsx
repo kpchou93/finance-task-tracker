@@ -1,0 +1,3 @@
+export default function BrandMark() {
+  return <svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="10" r="9" fill="#ffab8b" /><circle cx="30" cy="18" r="9" fill="#ffba97" /><circle cx="26" cy="30" r="9" fill="#ff8b66" /><circle cx="13" cy="29" r="9" fill="#78bf97" /><circle cx="10" cy="16" r="9" fill="#98d8b5" /><circle cx="20" cy="21" r="8" fill="#ffe699" /><circle cx="17" cy="20" r="1.1" fill="#56423c" /><circle cx="23" cy="20" r="1.1" fill="#56423c" /><path d="M17.5 24q2.5 3 5 0" stroke="#56423c" strokeWidth="1.5" strokeLinecap="round" /></svg>;
+}

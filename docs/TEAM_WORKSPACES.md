@@ -22,7 +22,7 @@ Migrations 0004 and 0005 are applied and registered in Supabase history. 0005 en
 
 ## Responsive interface
 
-The refreshed dashboard uses a navy/teal interface. At phone widths, dedicated task cards expose the same editing, status and priority-review actions as the desktop table. Filters, navigation, dialogs and company forms adapt to narrow viewports. Mobile controls use at least 44-pixel action targets and 16-pixel form inputs.
+The dashboard uses the supplied Stitch design's cream, coral and mint interface, with rounded cards and a live completion banner. At phone widths, dedicated task cards expose the same editing, status and priority-review actions as the desktop table, with bottom navigation to working routes. Filters, navigation, dialogs and company forms adapt to narrow viewports. Mobile controls use at least 44-pixel action targets and 16-pixel form inputs. See `FRIENDLY_DESIGN.md` for the design adaptation.
 
 ## Remaining account setup
 

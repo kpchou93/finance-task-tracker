@@ -3,12 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { authenticate } from "@/lib/data/auth";
+import BrandMark from "./BrandMark";
 export default function AuthForm({ signup = false }: { signup?: boolean }) {
  const router = useRouter();
  const [pending,startTransition] = useTransition();
  const [error,setError] = useState("");
  const [message,setMessage] = useState("");
- return <main className="auth-page"><section className="auth-card"><Link className="auth-brand" href="/demo">F <span>Finance Task Tracker</span></Link><p className="eyebrow">YOUR FINANCE WORKSPACE</p><h1>{signup ? "Create your account" : "Welcome back"}</h1><p className="muted">{signup ? "Create your workspace, then bring your finance team together." : "Sign in to keep your finance work moving."}</p><form onSubmit={e => {
+ return <main className="auth-page"><section className="auth-card"><Link className="auth-brand" href="/demo"><BrandMark /><span>Finance Task Tracker</span></Link><p className="eyebrow">A little clarity, every day</p><h1>{signup ? "Make room for your team" : "Welcome back"}</h1><p className="muted">{signup ? "Create your workspace, then bring your finance team together." : "Your team’s next small win starts here."}</p><form onSubmit={e => {
   e.preventDefault(); const form = new FormData(e.currentTarget); setError(""); setMessage("");
   startTransition(async () => { try {
    const result = await authenticate(form, signup);
