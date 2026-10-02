@@ -43,7 +43,7 @@ tests/rls.sql exercises two-user isolation, cross-owner rejection, company integ
 auditing and anonymous separation. Run as postgres in the SQL Editor; it rolls back all synthetic test rows.
 
 The dashboard create/edit/complete workflow and suggestion reviews were exercised against the real database.
-The production build passed. Auth email delivery and final Vercel deployment require the owning accounts' configuration.
+The production build passed. Custom SMTP is currently off: Supabase's default mailer only sends confirmation emails to organization members. Configure Authentication / Emails / SMTP Settings before onboarding other staff (https://supabase.com/docs/guides/auth/auth-smtp). Email confirmation delivery and final Vercel deployment remain unverified; the GitHub integration still needs approval to be limited to this repository.
 
 If OneDrive causes an EINVAL error while cleaning generated build files, set NEXT_DIST_DIR to a fresh cache
 such as .next-local-unique for pnpm build and use the same value for pnpm start.
